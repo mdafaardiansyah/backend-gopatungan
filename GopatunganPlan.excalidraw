@@ -1,7 +1,7 @@
 {
   "type": "excalidraw",
   "version": 2,
-  "source": "https://excalidraw.com",
+  "source": "https://excalidraw-jetbrains-plugin",
   "elements": [
     {
       "id": "LTaTVcLOacdXlma2Pp9h2",
@@ -36,9 +36,9 @@
     {
       "id": "9s9g1rUhd_hFY_N5xbMBK",
       "type": "text",
-      "x": 722.0485331217448,
+      "x": 749.0318247477213,
       "y": 93.66666666666663,
-      "width": 267.19610595703125,
+      "width": 213.22952270507812,
       "height": 36.66666666666665,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -53,11 +53,11 @@
       "index": "a1",
       "roundness": null,
       "seed": 173723660,
-      "version": 284,
-      "versionNonce": 123660724,
+      "version": 285,
+      "versionNonce": 816108571,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1724339925627,
+      "updated": 1724478039177,
       "link": null,
       "locked": false,
       "text": "Table Entity List :",
@@ -68,14 +68,15 @@
       "containerId": null,
       "originalText": "Table Entity List :",
       "autoResize": true,
-      "lineHeight": 1.25
+      "lineHeight": 1.25,
+      "baseline": 30
     },
     {
       "id": "HKBSS8ifEnrfDTB1rG8yB",
       "type": "text",
       "x": 532,
       "y": 197,
-      "width": 689.1717529296875,
+      "width": 560.267578125,
       "height": 1935,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -90,11 +91,11 @@
       "index": "a2",
       "roundness": null,
       "seed": 1783934476,
-      "version": 1148,
-      "versionNonce": 2069192244,
+      "version": 1149,
+      "versionNonce": 1707347515,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1724340174306,
+      "updated": 1724478032614,
       "link": null,
       "locked": false,
       "text": "1. Users\n    a. id -> int\n    b. name -> varchar\n    c. job -> varchar\n    d. email -> varchar\n    e. password_hash -> varchar\n    f. avatar_file_name -> varchar\n    g. role -> varchar\n    h. token -> varchar\n    i. created_time -> datetime\n    j. updated_time -> datetime\n    \n2. Campaigns\n    a. id -> int\n    b. (*fk) user_id -> int\n    c. name -> varchar\n    d. short_describtion -> varchar\n    e. long_descrition -> text\n    f. goal_amount -> int\n    g. current_amount -> int\n    h. benefit -> varchar\n    i. backer_count -> int\n    j. slug -> varchar\n    k. created_time -> datetime\n    l. updated_time -> datetime\n\n3. Campaign Images\n    a. id -> int\n    b. (*fk) campaign_id -> int\n    c. filename-> varchar\n    d. is_primary -> boolean (tinyint)\n    e. created_time -> datetime\n    f. updated_time -> datetime\n\n4. Transactions\n    a. id -> int\n    b. (*fk) campaign_id -> int\n    c. (*fk) user_id -> int\n    d. amount_idr -> int\n    e. status -> varchar\n    f. sericode -> varchar\n    g. created_time -> datetime\n    h. updated_time -> datetime",
@@ -105,14 +106,15 @@
       "containerId": null,
       "originalText": "1. Users\n    a. id -> int\n    b. name -> varchar\n    c. job -> varchar\n    d. email -> varchar\n    e. password_hash -> varchar\n    f. avatar_file_name -> varchar\n    g. role -> varchar\n    h. token -> varchar\n    i. created_time -> datetime\n    j. updated_time -> datetime\n    \n2. Campaigns\n    a. id -> int\n    b. (*fk) user_id -> int\n    c. name -> varchar\n    d. short_describtion -> varchar\n    e. long_descrition -> text\n    f. goal_amount -> int\n    g. current_amount -> int\n    h. benefit -> varchar\n    i. backer_count -> int\n    j. slug -> varchar\n    k. created_time -> datetime\n    l. updated_time -> datetime\n\n3. Campaign Images\n    a. id -> int\n    b. (*fk) campaign_id -> int\n    c. filename-> varchar\n    d. is_primary -> boolean (tinyint)\n    e. created_time -> datetime\n    f. updated_time -> datetime\n\n4. Transactions\n    a. id -> int\n    b. (*fk) campaign_id -> int\n    c. (*fk) user_id -> int\n    d. amount_idr -> int\n    e. status -> varchar\n    f. sericode -> varchar\n    g. created_time -> datetime\n    h. updated_time -> datetime",
       "autoResize": true,
-      "lineHeight": 1.25
+      "lineHeight": 1.25,
+      "baseline": 1927
     },
     {
       "id": "ov4ZL-oU-5542zyj5fqyK",
       "type": "text",
-      "x": 1232.6666666666665,
+      "x": 1243.7746225992837,
       "y": -100.33333333333331,
-      "width": 387.3838806152344,
+      "width": 365.16796875,
       "height": 90,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -127,11 +129,11 @@
       "index": "a3",
       "roundness": null,
       "seed": 355498548,
-      "version": 122,
-      "versionNonce": 877327756,
+      "version": 123,
+      "versionNonce": 958457339,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1724319961112,
+      "updated": 1724478041330,
       "link": null,
       "locked": false,
       "text": "- Crowdfunding Apps -\nGopatungan",
@@ -142,13 +144,12 @@
       "containerId": null,
       "originalText": "- Crowdfunding Apps -\nGopatungan",
       "autoResize": true,
-      "lineHeight": 1.25
+      "lineHeight": 1.25,
+      "baseline": 82
     }
   ],
   "appState": {
-    "gridSize": 20,
-    "gridStep": 5,
-    "gridModeEnabled": false,
+    "gridSize": null,
     "viewBackgroundColor": "#ffffff"
   },
   "files": {}
