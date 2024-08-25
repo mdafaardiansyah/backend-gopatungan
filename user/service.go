@@ -33,5 +33,4 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 		return newUser, err
 	}
 	return newUser, nil
-
 }
