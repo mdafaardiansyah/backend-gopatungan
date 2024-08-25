@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Gopatungan/helper"
 	"Gopatungan/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -27,5 +28,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, nil)
 	}
 
-	c.JSON(http.StatusOK, user)
+	response := helper.APIResponse("User has been registered", http.StatusOK, "success", user)
+
+	c.JSON(http.StatusOK, response)
 }
