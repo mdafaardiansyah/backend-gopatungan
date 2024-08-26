@@ -34,5 +34,5 @@ func FormatValidationError(err error) []string {
 		errors = append(errors, e.Error())
 	}
 
-	return errors //test github push repo
+	return errors //test github push repo to main
 }
