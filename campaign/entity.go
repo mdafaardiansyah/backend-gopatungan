@@ -15,6 +15,7 @@ type Campaign struct {
 	Slug             string    `gorm:"column:slug" json:"slug"`
 	CreatedAt        time.Time `gorm:"column:created_time;autoCreateTime" json:"created_time"`
 	UpdatedAt        time.Time `gorm:"column:updated_time;autoUpdateTime" json:"updated_time"`
+	CampaignImages   []CampaignImage
 }
 
 type CampaignImage struct {
