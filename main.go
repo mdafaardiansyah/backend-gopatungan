@@ -22,7 +22,7 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	authService := auth.NewService()
+	authService := auth.NewService() //done testing postman
 
 	fmt.Println(authService.GenerateToken(1001)) //testing generate token
 
