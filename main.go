@@ -2,9 +2,11 @@ package main
 
 import (
 	"Gopatungan/auth"
+	"Gopatungan/campaign"
 	"Gopatungan/handler"
 	"Gopatungan/helper"
 	"Gopatungan/user"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/driver/mysql"
@@ -24,6 +26,18 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
+	campaignRespository := campaign.NewRepository(db)
+
+	campaigns, err := campaignRespository.FindByUserID(3)
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println("debug")
+
+	fmt.Println(len(campaigns))
+
+	for _, campaign := range campaigns {
+		fmt.Println(campaign.Name)
+	}
 
 	userService := user.NewService(userRepository)
 	authService := auth.NewService() //done testing postman
