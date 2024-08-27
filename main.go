@@ -1,8 +1,10 @@
 package main
 
 import (
+	"Gopatungan/auth"
 	"Gopatungan/handler"
 	"Gopatungan/user"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -20,6 +22,9 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
+	authService := auth.NewService()
+
+	fmt.Println(authService.GenerateToken(1001)) //testing generate token
 
 	userHandler := handler.NewUserHandler(userService)
 
