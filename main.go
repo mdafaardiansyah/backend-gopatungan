@@ -26,7 +26,7 @@ func main() {
 
 	fmt.Println(authService.GenerateToken(1001)) //testing generate token
 
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
