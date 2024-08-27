@@ -5,7 +5,6 @@ import (
 	"Gopatungan/handler"
 	"Gopatungan/helper"
 	"Gopatungan/user"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/driver/mysql"
@@ -25,21 +24,9 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
+
 	userService := user.NewService(userRepository)
 	authService := auth.NewService() //done testing postman
-
-	token, err := authService.ValidateToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyfQ.rbY_zh7v_we9_S3bMNX3V-rp7YLS944LOYZd524aKSE")
-
-	if err != nil {
-		fmt.Println("Error di Validate Token")
-	}
-	if token.Valid {
-		fmt.Println("Token Valid")
-	} else {
-		fmt.Println("Token Invalid")
-	}
-
-	fmt.Println(authService.GenerateToken(1001)) //testing generate token
 
 	userHandler := handler.NewUserHandler(userService, authService)
 
