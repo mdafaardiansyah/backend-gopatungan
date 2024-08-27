@@ -36,7 +36,7 @@ func main() {
 	api.POST("/users", userHandler.RegisterUser)                                             //tested
 	api.POST("/sessions", userHandler.Login)                                                 //tested
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)                          //tested
-	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested
+	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested -middleware
 
 	router.Run()
 }
@@ -81,4 +81,4 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		}
 		c.Set("currentUser", user)
 	}
-}
+} //tested middleware postman
