@@ -1,6 +1,9 @@
 package campaign
 
-import "time"
+import (
+	"Gopatungan/user"
+	"time"
+)
 
 type Campaign struct {
 	ID               int       `gorm:"primary_key" json:"id"`
@@ -16,6 +19,7 @@ type Campaign struct {
 	CreatedAt        time.Time `gorm:"column:created_time;autoCreateTime" json:"created_time"`
 	UpdatedAt        time.Time `gorm:"column:updated_time;autoUpdateTime" json:"updated_time"`
 	CampaignImages   []CampaignImage
+	User             user.User
 }
 
 type CampaignImage struct {
