@@ -31,6 +31,21 @@ func main() {
 	campaignService := campaign.NewService(campaignRespository)
 	authService := auth.NewService() //done testing postman
 
+	input := campaign.CreateCampaignInput{}
+	input.Name = "Galang Dana UMKM Simantap"
+	input.ShortDescription = "Galang Dana UMKM Simantap"
+	input.Description = "Galang Dana UMKM Simantap"
+	input.GoalAmount = 20000000
+	input.Perks = "Galang Dana UMKM Simantap"
+
+	inputUser, _ := userService.GetUserByID(13)
+	input.User = inputUser
+
+	_, err = campaignService.CreateCampaign(input)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 
