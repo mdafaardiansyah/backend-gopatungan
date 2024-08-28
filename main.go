@@ -39,13 +39,16 @@ func main() {
 
 	api := router.Group("/api/v1")
 
+	//User
 	api.POST("/users", userHandler.RegisterUser)                                             //tested
 	api.POST("/sessions", userHandler.Login)                                                 //tested
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)                          //tested
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested -middleware
 
-	api.GET("/campaigns", campaignHandler.GetCampaigns)
-	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
+	//Campaign
+	api.GET("/campaigns", campaignHandler.GetCampaigns)    // tested
+	api.GET("/campaigns/:id", campaignHandler.GetCampaign) // tested
+	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 
 	router.Run()
 }
