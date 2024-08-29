@@ -101,6 +101,9 @@ func (h *CampaignHandler) UpdateCampaign(c *gin.Context) {
 		return
 	}
 
+	currentUser := c.MustGet("currentUser").(user.User)
+	inputData.User = currentUser
+
 	updatedCampaign, err := h.service.UpdateCampaign(inputID, inputData)
 	if err != nil {
 		response := helper.APIResponse("Failed to get update detail", http.StatusBadRequest, "error", nil)
