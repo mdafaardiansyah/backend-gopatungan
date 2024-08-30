@@ -46,10 +46,11 @@ func main() {
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested -middleware
 
 	//Campaign
-	api.GET("/campaigns", campaignHandler.GetCampaigns)                                              // tested
-	api.GET("/campaigns/:id", campaignHandler.GetCampaign)                                           // tested
-	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign) //tested
-	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
+	api.GET("/campaigns", campaignHandler.GetCampaigns)                                                 // tested
+	api.GET("/campaigns/:id", campaignHandler.GetCampaign)                                              // tested
+	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)    //tested
+	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign) //tested
+	api.POST("/campaigns-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
 
 	router.Run()
 }
