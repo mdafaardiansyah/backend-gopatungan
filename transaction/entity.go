@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"Gopatungan/campaign"
 	"Gopatungan/user"
 	"time"
 )
@@ -13,6 +14,7 @@ type Transaction struct {
 	Status     string `gorm:"column:status" json:"status"`
 	Code       string `gorm:"column:code" json:"code"`
 	User       user.User
+	Campaign   campaign.Campaign
 	CreatedAt  time.Time `gorm:"column:created_time;autoCreateTime"`
 	UpdatedAt  time.Time `gorm:"column:updated_time;autoUpdateTime"`
 }
