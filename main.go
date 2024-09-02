@@ -26,13 +26,13 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
-	campaignRespository := campaign.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
 	transactionRepository := transaction.NewRepository(db)
 
 	userService := user.NewService(userRepository)
-	campaignService := campaign.NewService(campaignRespository)
+	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService() //done testing postman
-	transactionService := transaction.NewService(transactionRepository)
+	transactionService := transaction.NewService(transactionRepository, campaignRepository)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
