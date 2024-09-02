@@ -1,6 +1,9 @@
 package transaction
 
-import "time"
+import (
+	"Gopatungan/user"
+	"time"
+)
 
 type Transaction struct {
 	ID         int    `gorm:"primary_key" json:"id"`
@@ -9,7 +12,7 @@ type Transaction struct {
 	Amount     int    `gorm:"column:amount" json:"amount"`
 	Status     string `gorm:"column:status" json:"status"`
 	Code       string `gorm:"column:code" json:"code"`
-	//PaymentURL string    `gorm:"column:payment_url" json:"payment_url"`
-	CreatedAt time.Time `gorm:"column:created_time;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_time;autoUpdateTime"`
+	User       user.User
+	CreatedAt  time.Time `gorm:"column:created_time;autoCreateTime"`
+	UpdatedAt  time.Time `gorm:"column:updated_time;autoUpdateTime"`
 }
