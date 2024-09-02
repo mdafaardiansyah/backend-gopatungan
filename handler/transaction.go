@@ -15,7 +15,7 @@ func NewTransactionHandler(service transaction.Service) *transactionHandler {
 	return &transactionHandler{service}
 }
 
-func (h *transactionHandler) GetCampaignTransaction(c *gin.Context) {
+func (h *transactionHandler) GetCampaignTransactions(c *gin.Context) {
 	var input transaction.GetCampaignTransactionsInput
 
 	err := c.ShouldBindUri(&input)

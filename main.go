@@ -5,6 +5,7 @@ import (
 	"Gopatungan/campaign"
 	"Gopatungan/handler"
 	"Gopatungan/helper"
+	"Gopatungan/transaction"
 	"Gopatungan/user"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -26,14 +27,16 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	campaignRespository := campaign.NewRepository(db)
-	//transactionRepository := transaction.NewRepository(db)
+	transactionRepository := transaction.NewRepository(db)
 
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRespository)
 	authService := auth.NewService() //done testing postman
+	transactionService := transaction.NewService(transactionRepository)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
+	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
 	router.Static("/images", "./images")
@@ -47,11 +50,14 @@ func main() {
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested -middleware
 
 	//Campaign
-	api.GET("/campaigns", campaignHandler.GetCampaigns)                                                 // tested
-	api.GET("/campaigns/:id", campaignHandler.GetCampaign)                                              // tested
-	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)    //tested
-	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign) //tested
-	api.POST("/campaigns-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
+	api.GET("/campaigns", campaignHandler.GetCampaigns)                                                  // tested
+	api.GET("/campaigns/:id", campaignHandler.GetCampaign)                                               // tested
+	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)     //tested
+	api.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)  //tested
+	api.POST("/campaigns-images", authMiddleware(authService, userService), campaignHandler.UploadImage) //tested
+
+	//Transaction
+	api.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions)
 
 	router.Run()
 }
