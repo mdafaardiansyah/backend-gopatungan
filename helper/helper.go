@@ -1,6 +1,10 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+	"math/rand"
+	"time"
+)
 
 type Response struct {
 	Meta Meta        `json:"meta"`
@@ -35,4 +39,9 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors //test github push repo to main last
+}
+
+func RandomInt(min, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return min + rand.Intn(max-min)
 }

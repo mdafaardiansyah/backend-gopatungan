@@ -2,7 +2,10 @@ package transaction
 
 import (
 	"Gopatungan/campaign"
+	"Gopatungan/helper"
 	"errors"
+	"fmt"
+	"time"
 )
 
 type service struct {
@@ -54,7 +57,7 @@ func (s *service) CreateTransaction(input CreateTransactionInput) (Transaction, 
 	transaction.Amount = input.Amount
 	transaction.UserID = input.User.ID
 	transaction.Status = "pending"
-	//transaction.Code = "ORDER"
+	transaction.Code = "ORD" + time.Now().Format("20060102") + "-" + fmt.Sprintf("%04d", helper.RandomInt(1, 9999))
 
 	newTransaction, err := s.repository.Save(transaction)
 	if err != nil {

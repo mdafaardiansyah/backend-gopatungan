@@ -34,14 +34,6 @@ func main() {
 	authService := auth.NewService() //done testing postman
 	transactionService := transaction.NewService(transactionRepository, campaignRepository)
 
-	user, _ := userService.GetUserByID(13)
-	input := transaction.CreateTransactionInput{
-		CampaignID: 8,
-		Amount:     200000,
-		User:       user,
-	}
-	transactionService.CreateTransaction(input)
-
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
@@ -67,6 +59,7 @@ func main() {
 	//Transaction
 	api.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions) // tested
 	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransactions)                   //tested
+	api.POST("/transactions", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 
 	router.Run()
 }
