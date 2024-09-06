@@ -51,5 +51,5 @@ func (s *service) GetToken(transaction transaction.Transaction, user user.User) 
 		return "", err
 	}
 
-	return snapTokenResp, nil
+	return snapTokenResp.RedirectURL, nil
 }
