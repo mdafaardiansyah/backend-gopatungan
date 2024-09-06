@@ -45,4 +45,11 @@ func (s *service) GetToken(transaction transaction.Transaction, user user.User) 
 			GrossAmt: int64(transaction.Amount),
 		},
 	}
+
+	snapTokenResp, err := snap.CreateTransaction(snapReq)
+	if err != nil {
+		return "", err
+	}
+
+	return snapTokenResp, nil
 }
