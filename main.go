@@ -5,6 +5,7 @@ import (
 	"Gopatungan/campaign"
 	"Gopatungan/handler"
 	"Gopatungan/helper"
+	"Gopatungan/payment"
 	"Gopatungan/transaction"
 	"Gopatungan/user"
 	"github.com/gin-gonic/gin"
@@ -32,7 +33,8 @@ func main() {
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService() //done testing postman
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)

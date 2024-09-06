@@ -1,7 +1,6 @@
 package payment
 
 import (
-	"Gopatungan/transaction"
 	"Gopatungan/user"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
@@ -13,7 +12,7 @@ type service struct {
 }
 
 type Service interface {
-	GetPaymentURL(transaction transaction.Transaction, user user.User) (string, error)
+	GetPaymentURL(transaction Transaction, user user.User) (string, error)
 }
 
 func NewService() *service {
@@ -29,7 +28,7 @@ func NewService() *service {
 //	return snap.CreateTransaction(req)
 //}
 
-func (s *service) GetPaymentURL(transaction transaction.Transaction, user user.User) (string, error) {
+func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string, error) {
 	midtransServerKey := os.Getenv("API_MIDTRANS_SERVER_KEY")
 
 	midtrans.ServerKey = midtransServerKey
