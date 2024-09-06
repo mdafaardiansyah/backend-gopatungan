@@ -13,7 +13,7 @@ type service struct {
 }
 
 type Service interface {
-	GetToken(transaction transaction.Transaction, user user.User) (string, error)
+	GetPaymentURL(transaction transaction.Transaction, user user.User) (string, error)
 }
 
 func NewService() *service {
@@ -29,7 +29,7 @@ func NewService() *service {
 //	return snap.CreateTransaction(req)
 //}
 
-func (s *service) GetToken(transaction transaction.Transaction, user user.User) (string, error) {
+func (s *service) GetPaymentURL(transaction transaction.Transaction, user user.User) (string, error) {
 	midtransServerKey := os.Getenv("API_MIDTRANS_SERVER_KEY")
 
 	midtrans.ServerKey = midtransServerKey
