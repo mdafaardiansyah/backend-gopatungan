@@ -37,7 +37,7 @@ func (r *repository) GetByUserID(userID int) ([]Transaction, error) {
 }
 
 func (r *repository) Save(transaction Transaction) (Transaction, error) {
-	err := r.db.Save(&transaction).Error
+	err := r.db.Create(&transaction).Error
 	if err != nil {
 		return transaction, err
 	}
