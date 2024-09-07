@@ -10,6 +10,7 @@ import (
 	"Gopatungan/user"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -25,6 +26,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	godotenv.Load()
 
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
