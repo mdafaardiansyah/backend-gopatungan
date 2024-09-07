@@ -19,19 +19,13 @@ func NewService() *service {
 	return &service{}
 }
 
-//func CreateTransactionToken(req *snap.Request) (string, *midtrans.Error) {
-//
-//	midtransServerKey := "API_MIDTRANS_SERVER_KEY"
-//	midtrans.ServerKey = midtransServerKey
-//	midtrans.Environment = midtrans.Sandbox
-//
-//	return snap.CreateTransaction(req)
-//}
-
 func (s *service) GetPaymentURL(transaction Transaction, user user.User) (string, error) {
 	midtransServerKey := os.Getenv("API_MIDTRANS_SERVER_KEY")
+	midtransClientKey := os.Getenv("API_MIDTRANS_CLIENT_KEY")
 
 	midtrans.ServerKey = midtransServerKey
+	midtrans.ClientKey = midtransClientKey
+
 	midtrans.Environment = midtrans.Sandbox
 
 	snapReq := &snap.Request{
