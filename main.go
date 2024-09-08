@@ -8,6 +8,7 @@ import (
 	"Gopatungan/payment"
 	"Gopatungan/transaction"
 	"Gopatungan/user"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
@@ -15,19 +16,37 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func main() {
 	//refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	dsn := "root:1234@tcp(127.0.0.1:3306)/gopatungan_db?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
+	// Load .env file
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 
-	godotenv.Load()
+	// Get environment variables
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	dbCharset := os.Getenv("DB_CHARSET")
+	dbParseTime := os.Getenv("DB_PARSE_TIME")
+	dbLoc := os.Getenv("DB_LOC")
+
+	// Buat DSN string
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%s&loc=%s",
+		dbUsername, dbPassword, dbHost, dbPort, dbName, dbCharset, dbParseTime, dbLoc)
+
+	// Buka koneksi ke database
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
