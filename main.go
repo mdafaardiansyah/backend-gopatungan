@@ -74,6 +74,7 @@ func main() {
 	api.POST("/sessions", userHandler.Login)                                                 //tested
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)                          //tested
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar) //tested -middleware
+	api.GET("/users/fetch", authMiddleware(authService, userService), userHandler.FetchUser) //tested -middleware
 
 	//Campaign
 	api.GET("/campaigns", campaignHandler.GetCampaigns)                                                  // tested
