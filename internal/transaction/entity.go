@@ -1,8 +1,8 @@
 package transaction
 
 import (
-	"Gopatungan/campaign"
-	"Gopatungan/user"
+	"Gopatungan/internal/campaign"
+	"Gopatungan/internal/user"
 	"time"
 )
 

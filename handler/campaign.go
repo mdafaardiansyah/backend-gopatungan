@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"Gopatungan/campaign"
 	"Gopatungan/helper"
-	"Gopatungan/user"
+	campaign2 "Gopatungan/internal/campaign"
+	"Gopatungan/internal/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,10 +11,10 @@ import (
 )
 
 type CampaignHandler struct {
-	service campaign.Service
+	service campaign2.Service
 }
 
-func NewCampaignHandler(service campaign.Service) *CampaignHandler {
+func NewCampaignHandler(service campaign2.Service) *CampaignHandler {
 	return &CampaignHandler{service}
 }
 
@@ -28,12 +28,12 @@ func (h *CampaignHandler) GetCampaigns(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("List of Campaigns", http.StatusOK, "success", campaign.FormatCampaigns(campaigns))
+	response := helper.APIResponse("List of Campaigns", http.StatusOK, "success", campaign2.FormatCampaigns(campaigns))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *CampaignHandler) GetCampaign(c *gin.Context) {
-	var input campaign.GetCampaignDetailInput
+	var input campaign2.GetCampaignDetailInput
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
@@ -49,12 +49,12 @@ func (h *CampaignHandler) GetCampaign(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Campaign detail", http.StatusOK, "success", campaign.FormatCampaignDetail(campaignDetail))
+	response := helper.APIResponse("Campaign detail", http.StatusOK, "success", campaign2.FormatCampaignDetail(campaignDetail))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *CampaignHandler) CreateCampaign(c *gin.Context) {
-	var input campaign.CreateCampaignInput
+	var input campaign2.CreateCampaignInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -76,12 +76,12 @@ func (h *CampaignHandler) CreateCampaign(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Success to create campaign", http.StatusOK, "success", campaign.FormatCampaign(newCampaign))
+	response := helper.APIResponse("Success to create campaign", http.StatusOK, "success", campaign2.FormatCampaign(newCampaign))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *CampaignHandler) UpdateCampaign(c *gin.Context) {
-	var inputID campaign.GetCampaignDetailInput
+	var inputID campaign2.GetCampaignDetailInput
 
 	err := c.ShouldBindUri(&inputID)
 	if err != nil {
@@ -90,7 +90,7 @@ func (h *CampaignHandler) UpdateCampaign(c *gin.Context) {
 		return
 	}
 
-	var inputData campaign.CreateCampaignInput
+	var inputData campaign2.CreateCampaignInput
 
 	err = c.ShouldBindJSON(&inputData)
 	if err != nil {
@@ -111,12 +111,12 @@ func (h *CampaignHandler) UpdateCampaign(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("Success to Update campaign detail", http.StatusOK, "success", campaign.FormatCampaign(updatedCampaign))
+	response := helper.APIResponse("Success to Update campaign detail", http.StatusOK, "success", campaign2.FormatCampaign(updatedCampaign))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *CampaignHandler) UploadImage(c *gin.Context) {
-	var input campaign.CreateCampaignImageInput
+	var input campaign2.CreateCampaignImageInput
 
 	err := c.ShouldBind(&input)
 	if err != nil {

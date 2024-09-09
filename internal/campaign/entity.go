@@ -1,7 +1,7 @@
 package campaign
 
 import (
-	"Gopatungan/user"
+	"Gopatungan/internal/user"
 	"time"
 )
 

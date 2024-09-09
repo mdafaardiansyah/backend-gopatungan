@@ -1,25 +1,25 @@
 package handler
 
 import (
-	"Gopatungan/auth"
 	"Gopatungan/helper"
-	"Gopatungan/user"
+	"Gopatungan/internal/auth"
+	user2 "Gopatungan/internal/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type userHandler struct {
-	userService user.Service
+	userService user2.Service
 	authService auth.Service
 }
 
-func NewUserHandler(userService user.Service, authService auth.Service) *userHandler {
+func NewUserHandler(userService user2.Service, authService auth.Service) *userHandler {
 	return &userHandler{userService, authService}
 }
 
 func (h *userHandler) RegisterUser(c *gin.Context) {
-	var input user.RegisterUserInput
+	var input user2.RegisterUserInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -46,7 +46,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	formatter := user.FormatUser(newUser, token)
+	formatter := user2.FormatUser(newUser, token)
 
 	response := helper.APIResponse("User has been registered", http.StatusOK, "success", formatter)
 
@@ -55,7 +55,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 
 func (h *userHandler) Login(c *gin.Context) {
 
-	var input user.LoginInput
+	var input user2.LoginInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -83,7 +83,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	formatter := user.FormatUser(loggedinUser, token)
+	formatter := user2.FormatUser(loggedinUser, token)
 
 	response := helper.APIResponse("Successfuly logged in", http.StatusOK, "success", formatter)
 
@@ -92,7 +92,7 @@ func (h *userHandler) Login(c *gin.Context) {
 
 func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 
-	var input user.CheckEmailInput
+	var input user2.CheckEmailInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -140,7 +140,7 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	currentUser := c.MustGet("currentUser").(user.User)
+	currentUser := c.MustGet("currentUser").(user2.User)
 	userID := currentUser.ID
 
 	//path := "images/" + file.Filename
@@ -176,9 +176,9 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 
 func (h *userHandler) FetchUser(c *gin.Context) {
 
-	currentUser := c.MustGet("currentUser").(user.User)
+	currentUser := c.MustGet("currentUser").(user2.User)
 
-	formatter := user.FormatUser(currentUser, "")
+	formatter := user2.FormatUser(currentUser, "")
 
 	response := helper.APIResponse("Successfuly fetch user data", http.StatusOK, "success", formatter)
 

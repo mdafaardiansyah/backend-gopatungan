@@ -1,6 +1,8 @@
 package transaction
 
-import "Gopatungan/user"
+import (
+	"Gopatungan/internal/user"
+)
 
 type GetCampaignTransactionsInput struct {
 	ID   int `uri:"id" binding:"required"`

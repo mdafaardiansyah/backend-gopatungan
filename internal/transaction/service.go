@@ -1,9 +1,9 @@
 package transaction
 
 import (
-	"Gopatungan/campaign"
 	"Gopatungan/helper"
-	"Gopatungan/payment"
+	"Gopatungan/internal/campaign"
+	payment2 "Gopatungan/internal/payment"
 	"errors"
 	"fmt"
 	"strconv"
@@ -13,7 +13,7 @@ import (
 type service struct {
 	repository         Repository
 	campaignRepository campaign.Repository
-	paymentService     payment.Service
+	paymentService     payment2.Service
 }
 
 type Service interface {
@@ -23,7 +23,7 @@ type Service interface {
 	ProcessPayment(input TransactionNotificationInput) error
 }
 
-func NewService(repository Repository, campaignRepository campaign.Repository, paymentService payment.Service) *service {
+func NewService(repository Repository, campaignRepository campaign.Repository, paymentService payment2.Service) *service {
 	return &service{repository, campaignRepository, paymentService}
 }
 
@@ -68,7 +68,7 @@ func (s *service) CreateTransaction(input CreateTransactionInput) (Transaction, 
 		return newTransaction, err
 	}
 
-	paymentTransaction := payment.Transaction{
+	paymentTransaction := payment2.Transaction{
 		ID:     newTransaction.ID,
 		Amount: newTransaction.Amount,
 	}

@@ -1,7 +1,7 @@
 package payment
 
 import (
-	"Gopatungan/user"
+	"Gopatungan/internal/user"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
 	"os"

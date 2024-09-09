@@ -2,22 +2,22 @@ package handler
 
 import (
 	"Gopatungan/helper"
-	"Gopatungan/transaction"
-	"Gopatungan/user"
+	transaction2 "Gopatungan/internal/transaction"
+	"Gopatungan/internal/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type transactionHandler struct {
-	service transaction.Service
+	service transaction2.Service
 }
 
-func NewTransactionHandler(service transaction.Service) *transactionHandler {
+func NewTransactionHandler(service transaction2.Service) *transactionHandler {
 	return &transactionHandler{service}
 }
 
 func (h *transactionHandler) GetCampaignTransactions(c *gin.Context) {
-	var input transaction.GetCampaignTransactionsInput
+	var input transaction2.GetCampaignTransactionsInput
 
 	err := c.ShouldBindUri(&input)
 	if err != nil {
@@ -35,7 +35,7 @@ func (h *transactionHandler) GetCampaignTransactions(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("Campaign's transaction detail", http.StatusOK, "success", transaction.FormatCampaignTransactions(transactions))
+	response := helper.APIResponse("Campaign's transaction detail", http.StatusOK, "success", transaction2.FormatCampaignTransactions(transactions))
 	c.JSON(http.StatusOK, response)
 }
 
@@ -50,12 +50,12 @@ func (h *transactionHandler) GetUserTransactions(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("User's transaction detail", http.StatusOK, "success", transaction.FormatUserTransactions(transactions))
+	response := helper.APIResponse("User's transaction detail", http.StatusOK, "success", transaction2.FormatUserTransactions(transactions))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *transactionHandler) CreateTransaction(c *gin.Context) {
-	var input transaction.CreateTransactionInput
+	var input transaction2.CreateTransactionInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -77,12 +77,12 @@ func (h *transactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Success create transaction", http.StatusOK, "success", transaction.FormatTransaction(newTransaction))
+	response := helper.APIResponse("Success create transaction", http.StatusOK, "success", transaction2.FormatTransaction(newTransaction))
 	c.JSON(http.StatusOK, response)
 }
 
 func (h *transactionHandler) GetNotification(c *gin.Context) {
-	var input transaction.TransactionNotificationInput
+	var input transaction2.TransactionNotificationInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {

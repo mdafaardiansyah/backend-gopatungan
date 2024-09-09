@@ -1,6 +1,8 @@
 package campaign
 
-import "Gopatungan/user"
+import (
+	"Gopatungan/internal/user"
+)
 
 type GetCampaignDetailInput struct {
 	ID int `uri:"id" binding:"required"`

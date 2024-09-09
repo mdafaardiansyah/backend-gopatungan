@@ -1,63 +1,46 @@
 package main
 
 import (
-	"Gopatungan/auth"
-	"Gopatungan/campaign"
 	"Gopatungan/handler"
 	"Gopatungan/helper"
-	"Gopatungan/payment"
-	"Gopatungan/transaction"
-	"Gopatungan/user"
-	"fmt"
+	"Gopatungan/internal/auth"
+	campaign2 "Gopatungan/internal/campaign"
+	"Gopatungan/internal/payment"
+	transaction2 "Gopatungan/internal/transaction"
+	user2 "Gopatungan/internal/user"
+	"Gopatungan/pkg/config"
+	"Gopatungan/pkg/database"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
 func main() {
 	//refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	// Load .env file
-	err := godotenv.Load()
+	err := config.LoadEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Get environment variables
-	dbUsername := os.Getenv("DB_USERNAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-	dbCharset := os.Getenv("DB_CHARSET")
-	dbParseTime := os.Getenv("DB_PARSE_TIME")
-	dbLoc := os.Getenv("DB_LOC")
-
-	// Buat DSN string
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%s&loc=%s",
-		dbUsername, dbPassword, dbHost, dbPort, dbName, dbCharset, dbParseTime, dbLoc)
-
-	// Buka koneksi ke database
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	// Buat koneksi ke database
+	db, err := database.NewDatabaseConnection()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	userRepository := user.NewRepository(db)
-	campaignRepository := campaign.NewRepository(db)
-	transactionRepository := transaction.NewRepository(db)
+	userRepository := user2.NewRepository(db)
+	campaignRepository := campaign2.NewRepository(db)
+	transactionRepository := transaction2.NewRepository(db)
 
-	userService := user.NewService(userRepository)
-	campaignService := campaign.NewService(campaignRepository)
+	userService := user2.NewService(userRepository)
+	campaignService := campaign2.NewService(campaignRepository)
 	authService := auth.NewService() //done testing postman
 	paymentService := payment.NewService()
-	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
+	transactionService := transaction2.NewService(transactionRepository, campaignRepository, paymentService)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
@@ -92,7 +75,7 @@ func main() {
 	router.Run()
 }
 
-func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
+func authMiddleware(authService auth.Service, userService user2.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 
