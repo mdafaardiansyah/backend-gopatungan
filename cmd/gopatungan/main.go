@@ -48,7 +48,7 @@ func main() {
 
 	router := gin.Default()
 	router.Use(cors.Default())
-	router.Static("/images", "./images")
+	router.Static("/images", "./assets/images")
 
 	api := router.Group("/api/v1")
 
