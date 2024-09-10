@@ -1,59 +1,54 @@
-pipeline{
-    agent{
+pipeline {
+    agent {
         label "jenkins-agent"
     }
     tools {
-        jdk 'Java17'
-        maven 'Maven3'
+        // Install Golang version 1.23.1
+        go 'Go 1.23.1'
     }
     environment {
-        APP_NAME = "production-e2e-pipeline"
+        APP_NAME = "gopatungan-backend"
         RELEASE = "1.0.0"
         DOCKER_USER = "ardidafa"
-        DOCKER_PASS = 'dockerhub'
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        DOCKER_PASS = credentials('dockerhub-password') // Use Jenkins credentials for DockerHub password
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        // JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
-
     }
-    stages{
-        stage("Cleanup Workspace"){
+    stages {
+        stage("Cleanup Workspace") {
             steps {
                 cleanWs()
             }
-
         }
-    
-        stage("Checkout from SCM"){
+
+        stage("Checkout from SCM") {
             steps {
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/mdafaardiansyah/production-e2e-pipeline'
+                git branch: 'main', credentialsId: 'github', url: 'git@github.com:mdafaardiansyah/backend-gopatungan.git'
             }
-
         }
 
-        stage("Build Application"){
+        stage("Build Application") {
             steps {
-                sh "mvn clean package"
+                sh 'go mod tidy' // Ensure Go modules are up to date
+                sh 'go build -o gopatungan-backend .' // Build Go application
             }
-
         }
 
-        stage("Test Application"){
+        stage("Test Application") {
             steps {
-                sh "mvn test"
+                sh 'go test ./...' // Run Go unit tests
             }
-
         }
-        
-        stage("Sonarqube Analysis") {
+
+        stage("SonarQube Analysis") {
             steps {
                 script {
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh "mvn sonar:sonar"
+                        // Assuming the SonarQube Go plugin is set up
+                        sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=. -Dsonar.go.coverage.reportPaths=coverage.out'
                     }
                 }
             }
-
         }
 
         stage("Quality Gate") {
@@ -62,65 +57,33 @@ pipeline{
                     waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
                 }
             }
-
         }
 
         stage("Build & Push Docker Image") {
             steps {
                 script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
+                    docker.withRegistry('', DOCKER_PASS) {
+                        docker_image = docker.build("${IMAGE_NAME}")
                     }
-
-                    docker.withRegistry('',DOCKER_PASS) {
+                    docker.withRegistry('', DOCKER_PASS) {
                         docker_image.push("${IMAGE_TAG}")
                         docker_image.push('latest')
                     }
                 }
             }
-
         }
 
-        // stage("Trivy Scan") {
-        //     steps {
-        //         script {
-		//    sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image dmancloud/complete-prodcution-e2e-pipeline:1.0.0-22 --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table')
-        //         }
-        //     }
+        // Optional: Add Trivy scan or other security checks here
 
-        // }
-
-        // stage ('Cleanup Artifacts') {
-        //     steps {
-        //         script {
-        //             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-        //             sh "docker rmi ${IMAGE_NAME}:latest"
-        //         }
-        //     }
-        // }
-
-
-        // stage("Trigger CD Pipeline") {
-        //     steps {
-        //         script {
-        //             sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'https://jenkins.dev.dman.cloud/job/gitops-complete-pipeline/buildWithParameters?token=gitops-token'"
-        //         }
-        //     }
-
-        // }
-
+        // Optional: Add cleanup for Docker images here
     }
 
-    // post {
-    //     failure {
-    //         emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed", 
-    //                 mimeType: 'text/html',to: "dmistry@yourhostdirect.com"
-    //         }
-    //      success {
-    //            emailext body: '''${SCRIPT, template="groovy-html.template"}''', 
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful", 
-    //                 mimeType: 'text/html',to: "dmistry@yourhostdirect.com"
-    //       }      
-    // }
+    post {
+        success {
+            echo "Build succeeded!"
+        }
+        failure {
+            echo "Build failed!"
+        }
+    }
 }
