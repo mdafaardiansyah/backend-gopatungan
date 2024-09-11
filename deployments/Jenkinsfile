@@ -51,7 +51,8 @@ pipeline {
                             sonarsource/sonar-scanner-cli \
                             -Dsonar.projectKey=gopatungan-backend \
                             -Dsonar.sources=. \
-                            -Dsonar.go.coverage.reportPaths=coverage.out
+                            -Dsonar.go.coverage.reportPaths=coverage.out \
+                            -X
                     '''
                 }
             }
