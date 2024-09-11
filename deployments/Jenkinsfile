@@ -13,6 +13,7 @@ pipeline {
         DOCKER_PASS = 'dockerhub' // Gunakan kredensial Jenkins untuk password DockerHub
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+        SONAR_TOKEN = credentials('jenkins-sonarqube-token')
     }
     stages {
         stage("Cleanup Workspace") {
@@ -42,13 +43,20 @@ pipeline {
         stage("SonarQube Analysis") {
             steps {
                 script {
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        sh 'go test -coverprofile=coverage.out ./...'
-                        sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=. -Dsonar.go.coverage.reportPaths=coverage.out'
-                    }
+                    sh '''
+                        docker run --rm \
+                            -e SONAR_HOST_URL="https://sonarqube.glanze.site/" \
+                            -e SONAR_LOGIN=SONAR_TOKEN \
+                            -v "$(pwd):/usr/src" \
+                            sonarsource/sonar-scanner-cli \
+                            -Dsonar.projectKey=gopatungan-backend \
+                            -Dsonar.sources=. \
+                            -Dsonar.go.coverage.reportPaths=coverage.out
+                    '''
                 }
             }
         }
+
 
         stage("Quality Gate") {
             steps {
