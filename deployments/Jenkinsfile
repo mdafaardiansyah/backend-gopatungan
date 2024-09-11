@@ -30,7 +30,7 @@ pipeline {
         stage("Build Application") {
             steps {
                 sh 'go mod tidy' // Ensure Go modules are up to date
-                sh 'go build -o gopatungan-backend .' // Build Go application
+                sh 'go build -o gopatungan-backend ./cmd/gopatungan'
             }
         }
 
