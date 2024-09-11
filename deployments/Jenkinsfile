@@ -13,7 +13,7 @@ pipeline {
         DOCKER_PASS = 'dockerhub' // Gunakan kredensial Jenkins untuk password DockerHub
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-        SONAR_TOKEN = credentials('jenkins-sonarqube-token')
+        SONAR_TOKEN = credentials('user-sonarqube-token')
     }
     stages {
         stage("Cleanup Workspace") {
