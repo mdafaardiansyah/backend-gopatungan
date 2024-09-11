@@ -23,7 +23,7 @@ pipeline {
 
         stage("Checkout from SCM") {
             steps {
-                git branch: 'main', credentialsId: 'github', url: 'git@github.com:mdafaardiansyah/backend-gopatungan.git'
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/mdafaardiansyah/backend-gopatungan.git'
             }
         }
 
