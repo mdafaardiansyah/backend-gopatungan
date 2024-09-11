@@ -3,15 +3,15 @@ pipeline {
         label "jenkins-agent"
     }
     tools {
-        // Install Golang version 1.23.1
-        go 'go1.23.1'
+        go 'go1.23.1' // Pastikan Go terinstal
+        // Tambahkan alat lain jika diperlukan
     }
     environment {
         APP_NAME = "gopatungan-backend"
         RELEASE = "1.0.0"
         DOCKER_USER = "ardidafa"
-        DOCKER_PASS = 'dockerhub' // Use Jenkins credentials for DockerHub password
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        DOCKER_PASS = 'dockerhub' // Gunakan kredensial Jenkins untuk password DockerHub
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
     stages {
@@ -29,23 +29,22 @@ pipeline {
 
         stage("Build Application") {
             steps {
-                sh 'go mod tidy' // Ensure Go modules are up to date
-                sh 'go build -o gopatungan-backend ./cmd/gopatungan'
+                sh 'go mod tidy' // Pastikan modul Go mutakhir
+                sh 'go build -o gopatungan-backend ./cmd/gopatungan' // Membangun aplikasi Go
             }
         }
-
-//         stage("Test Application") {
-//             steps {
-//                 sh 'go test ./...' // Run Go unit tests
-//             }
-//         }
+        //         stage("Test Application") {
+        //             steps {
+        //                 sh 'go test ./...' // Run Go unit tests
+        //             }
+        //         }
 
         stage("SonarQube Analysis") {
             steps {
                 script {
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                        // Assuming the SonarQube Go plugin is set up
-                        sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=. -Dsonar.go.coverage.reportPaths=coverage.out'
+                        // Pastikan sonar-scanner terinstal dan dapat diakses
+                        sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=./cmd/gopatungan -Dsonar.go.coverage.reportPaths=coverage.out'
                     }
                 }
             }
@@ -72,10 +71,6 @@ pipeline {
                 }
             }
         }
-
-        // Optional: Add Trivy scan or other security checks here
-
-        // Optional: Add cleanup for Docker images here
     }
 
     post {
@@ -87,3 +82,6 @@ pipeline {
         }
     }
 }
+
+
+
