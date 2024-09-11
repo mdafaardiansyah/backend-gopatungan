@@ -43,25 +43,24 @@ pipeline {
         stage("SonarQube Analysis") {
             steps {
                 script {
-                    sh '''
-                        docker run --rm \
-                            -e SONAR_HOST_URL="https://sonarqube.glanze.site/" \
-                            -e SONAR_LOGIN="${SONAR_TOKEN}" \
-                            -v "$(pwd):/usr/src" \
-                            sonarsource/sonar-scanner-cli \
-                            -Dsonar.projectKey=gopatungan-backend \
-                            -Dsonar.sources=. \
-                            -Dsonar.go.coverage.reportPaths=coverage.out \
-                            -X
-                    '''
+                    withSonarQubeEnv('sonarqube-scanner') {
+                        sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=gopatungan-backend \
+                        -Dsonar.sources=. \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.go.coverage.reportPaths=coverage.out
+                        """
+                    }
                 }
             }
         }
 
+
         stage("Quality Gate") {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube-token'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'user-sonarqube-token'
                 }
             }
         }
