@@ -39,24 +39,24 @@ pipeline {
         //                 sh 'go test ./...' // Run Go unit tests
         //             }
         //         }
-        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-            stage("SonarQube Analysis") {
-                steps {
-                    script {
-                        sh '''
-                            docker run --rm \
-                                -e SONAR_HOST_URL="https://sonarqube.glanze.site/" \
-                                -e SONAR_LOGIN=$SONAR_TOKEN \
-                                -v "$(pwd):/usr/src" \
-                                sonarsource/sonar-scanner-cli \
-                                -Dsonar.projectKey=gopatungan-backend \
-                                -Dsonar.sources=. \
-                                -Dsonar.go.coverage.reportPaths=coverage.out
-                        '''
-                    }
+
+        stage("SonarQube Analysis") {
+            steps {
+                script {
+                    sh '''
+                        docker run --rm \
+                            -e SONAR_HOST_URL="https://sonarqube.glanze.site/" \
+                            -e SONAR_LOGIN=$SONAR_TOKEN \
+                            -v "$(pwd):/usr/src" \
+                            sonarsource/sonar-scanner-cli \
+                            -Dsonar.projectKey=gopatungan-backend \
+                            -Dsonar.sources=. \
+                            -Dsonar.go.coverage.reportPaths=coverage.out
+                    '''
                 }
             }
         }
+
 
         stage("Quality Gate") {
             steps {
