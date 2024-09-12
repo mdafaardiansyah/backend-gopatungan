@@ -41,22 +41,22 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                scannerHome = tool 'sonarqube-scanner-latest';
+                scannerHome = tool 'sonarqube-scanner-latest'
             }
             steps {
                 script {
-                    withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {  // Use the correct SonarQube server configuration here
+                    withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {
                         sh """
-                        sonar-scanner \
+                        ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=gopatungan-backend \
                         -Dsonar.sources=. \
                         -Dsonar.login=${SONAR_TOKEN}
-                        ${scannerHome}/bin/sonar-scanner
                         """
                     }
                 }
             }
         }
+
 
         stage("Quality Gate") {
             steps {
