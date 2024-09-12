@@ -4,6 +4,7 @@ pipeline {
     }
     tools {
         go 'go1.23.1'
+        sonar 'sonarqube-scanner'
     }
     environment {
         APP_NAME = "gopatungan-backend"
