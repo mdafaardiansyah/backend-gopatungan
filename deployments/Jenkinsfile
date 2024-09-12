@@ -42,20 +42,11 @@ pipeline {
 
         stage("SonarQube Analysis") {
             steps {
-                script {
-                    withSonarQubeEnv('sonarqube-scanner-latest') {
-                        sh """
-                        sonar-scanner \
-                        -Dsonar.projectKey=gopatungan-backend \
-                        -Dsonar.sources=. \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.go.coverage.reportPaths=coverage.out
-                        """
-                    }
+                withSonarQubeEnv('sonarqube-scanner-latest') {
+                    sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=. -Dsonar.go.coverage.reportPaths=coverage.out'
                 }
             }
         }
-
 
         stage("Quality Gate") {
             steps {
