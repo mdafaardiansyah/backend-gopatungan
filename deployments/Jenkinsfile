@@ -45,7 +45,7 @@ pipeline {
             }
             steps {
                 script {
-                    withSonarQubeEnv(credentialsId: 'lil-sonar-credentials', installationName: 'sonarqube-scanner') {  // Use the correct SonarQube server configuration here
+                    withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {  // Use the correct SonarQube server configuration here
                         sh """
                         sonar-scanner \
                         -Dsonar.projectKey=gopatungan-backend \
