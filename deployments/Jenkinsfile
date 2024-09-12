@@ -4,7 +4,6 @@ pipeline {
     }
     tools {
         go 'go1.23.1'
-        SonarQubeScanner 'sonarqube-scanner-latest'
     }
     environment {
         APP_NAME = "gopatungan-backend"
@@ -41,14 +40,18 @@ pipeline {
         //         }
 
         stage('SonarQube Analysis') {
+            environment {
+                scannerHome = tool 'sonarqube-scanner-latest';
+            }
             steps {
                 script {
-                    withSonarQubeEnv('sonarqube-scanner') {  // Use the correct SonarQube server configuration here
+                    withSonarQubeEnv(credentialsId: 'lil-sonar-credentials', installationName: 'sonarqube-scanner') {  // Use the correct SonarQube server configuration here
                         sh """
                         sonar-scanner \
                         -Dsonar.projectKey=gopatungan-backend \
                         -Dsonar.sources=. \
                         -Dsonar.login=${SONAR_TOKEN}
+                        ${scannerHome}/bin/sonar-scanner
                         """
                     }
                 }
