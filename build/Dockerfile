@@ -1,5 +1,5 @@
 # Menggunakan image Golang sebagai base image
-FROM golang:1.20
+FROM golang:1.23.1
 
 # Set working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Mengkompilasi aplikasi
-RUN go build -o main .
+RUN go build -o app ./cmd/gopatungan
 
 # Menjalankan aplikasi
-CMD ["./main"]
+CMD ["./app"]
