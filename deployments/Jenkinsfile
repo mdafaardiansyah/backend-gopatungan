@@ -3,14 +3,14 @@ pipeline {
         label "jenkins-agent"
     }
     tools {
-        go 'go1.23.1' // Pastikan Go terinstal
-        // Tambahkan alat lain jika diperlukan
+        go 'go1.23.1'
+        sonarScanner 'sonar-scanner'
     }
     environment {
         APP_NAME = "gopatungan-backend"
         RELEASE = "1.0.0"
         DOCKER_USER = "ardidafa"
-        DOCKER_PASS = 'dockerhub' // Gunakan kredensial Jenkins untuk password DockerHub
+        DOCKER_PASS = 'dockerhub'
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         SONAR_TOKEN = credentials('user-sonarqube-token')
