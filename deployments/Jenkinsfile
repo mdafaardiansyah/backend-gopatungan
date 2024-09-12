@@ -4,7 +4,7 @@ pipeline {
     }
     tools {
         go 'go1.23.1'
-        sonarScanner 'sonarqube-scanner-latest'
+        sonarScanner 'sonarqube-scanner'
     }
     environment {
         APP_NAME = "gopatungan-backend"
@@ -42,7 +42,7 @@ pipeline {
 
         stage("SonarQube Analysis") {
             steps {
-                withSonarQubeEnv('sonarqube-scanner-latest') {
+                withSonarQubeEnv('sonarqube-scanner') {
                     sh 'sonar-scanner -Dsonar.projectKey=gopatungan-backend -Dsonar.sources=. -Dsonar.go.coverage.reportPaths=coverage.out'
                 }
             }
