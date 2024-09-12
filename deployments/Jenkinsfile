@@ -42,7 +42,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    withSonarQubeEnv('sonarqube-server') {  // Use the correct SonarQube server configuration here
+                    withSonarQubeEnv('sonarqube-scanner') {  // Use the correct SonarQube server configuration here
                         sh """
                         sonar-scanner \
                         -Dsonar.projectKey=gopatungan-backend \
