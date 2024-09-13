@@ -13,7 +13,7 @@ pipeline {
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         SONAR_TOKEN = credentials('user-sonarqube-token')
-        VPS_SERVER = "user@your_vps_ip"
+        VPS_HOST = credentials('vps-host-credential')
         VPS_DIR = "/path/to/gopatungan"
         DISCORD_WEBHOOK = credentials('discord-webhook')
     }
@@ -83,15 +83,13 @@ pipeline {
         stage('Deploy to VPS') {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
-                    sh """
-                        [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                        ssh-keyscan -t rsa,dsa ${VPS_SERVER.split('@')[1]} >> ~/.ssh/known_hosts
-                        ssh ${VPS_SERVER} '
-                            cd ${VPS_DIR}/build
-                            docker-compose pull
-                            docker-compose up -d --force-recreate
-                        '
-                    """
+                    sh '''
+                        ssh $VPS_HOST <<EOF
+                        cd /path/to/your/project
+                        git pull origin main
+                        docker-compose up -d --build
+                        EOF
+                    '''
                 }
             }
         }
