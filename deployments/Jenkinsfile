@@ -9,10 +9,12 @@ pipeline {
         APP_NAME = "gopatungan-backend"
         RELEASE = "1.0.0"
         DOCKER_USER = "ardidafa"
-        DOCKER_PASS = 'dockerhub'
+        DOCKER_CREDS = credentials('dockerhub')
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         SONAR_TOKEN = credentials('user-sonarqube-token')
+        VPS_SERVER = "user@your_vps_ip"
+        VPS_DIR = "/path/to/gopatungan"
     }
     stages {
         stage("Cleanup Workspace") {
@@ -29,39 +31,38 @@ pipeline {
 
         stage("Build Application") {
             steps {
-                sh 'go mod tidy' // Pastikan modul Go mutakhir
-                sh 'go build -o gopatungan-backend ./cmd/gopatungan' // Membangun aplikasi Go
+                sh 'go mod tidy'
+                sh 'go build -o gopatungan-backend ./cmd/gopatungan'
             }
         }
-        //         stage("Test Application") {
-        //             steps {
-        //                 sh 'go test ./...' // Run Go unit tests
-        //             }
-        //         }
+
+        stage("Run Tests") {
+            steps {
+                sh 'go test ./... -v -cover'
+            }
+        }
 
         stage('SonarQube Analysis') {
             environment {
                 scannerHome = tool 'sonarqube-scanner-latest'
             }
             steps {
-                script {
-                    withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {
-                        sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=gopatungan-backend \
-                        -Dsonar.sources=. \
-                        -Dsonar.login=${SONAR_TOKEN}
-                        """
-                    }
+                withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=gopatungan-backend \
+                    -Dsonar.sources=. \
+                    -Dsonar.go.coverage.reportPaths=coverage.out \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    """
                 }
             }
         }
 
-
         stage("Quality Gate") {
             steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'user-sonarqube-token'
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -69,12 +70,26 @@ pipeline {
         stage("Build & Push Docker Image") {
             steps {
                 script {
-                    docker.withRegistry('', DOCKER_PASS) {
-                        docker_image = docker.build("${IMAGE_NAME}", "-f build/Dockerfile .")
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}", "-f build/Dockerfile .")
+                        customImage.push()
+                        customImage.push('latest')
                     }
-                    docker.withRegistry('', DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
+                }
+            }
+        }
+
+        stage('Deploy to VPS') {
+            steps {
+                script {
+                    sshagent(credentials: ['vps-ssh-key']) {
+                        sh """
+                            ssh ${VPS_SERVER} '
+                                cd ${VPS_DIR}/build
+                                docker-compose pull
+                                docker-compose up -d --force-recreate
+                            '
+                        """
                     }
                 }
             }
@@ -82,14 +97,22 @@ pipeline {
     }
 
     post {
+        always {
+            cleanWs()
+        }
         success {
-            echo "Build succeeded!"
+            discordSend (
+                webhookURL: credentials('discord-webhook'),
+                color: '#36a64f',
+                message: "Deployment Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            )
         }
         failure {
-            echo "Build failed!"
+            discordSend (
+                webhookURL: credentials('discord-webhook'),
+                color: '#ff0000',
+                message: "Deployment Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            )
         }
     }
 }
-
-
-
