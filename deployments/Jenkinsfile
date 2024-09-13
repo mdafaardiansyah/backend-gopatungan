@@ -84,7 +84,10 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh '''
-                        ssh $VPS_HOST <<EOF
+                        # Add or update the host key
+                        ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
+
+                        ssh -o StrictHostKeyChecking=accept-new $VPS_HOST <<EOF
                         cd /path/to/your/project
                         git pull origin main
                         docker-compose up -d --build
