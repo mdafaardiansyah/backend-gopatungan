@@ -103,15 +103,17 @@ pipeline {
         success {
             discordSend (
                 webhookURL: credentials('discord-webhook'),
-                color: '#36a64f',
-                message: "Deployment Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+                title: "Deployment Successful", // Gunakan 'title' untuk judul pesan
+                description: "${env.JOB_NAME} ${env.BUILD_NUMBER}", // Gunakan 'description' untuk isi pesan
+                color: 36a64f // Gunakan nilai heksadesimal tanpa tanda kutip
             )
         }
         failure {
             discordSend (
                 webhookURL: credentials('discord-webhook'),
-                color: '#ff0000',
-                message: "Deployment Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+                title: "Deployment Failed",
+                description: "${env.JOB_NAME} ${env.BUILD_NUMBER}",
+                color: 0xff0000 // Atau bisa juga ditulis 'ff0000'
             )
         }
     }
