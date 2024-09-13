@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    image: ardidafa/gopatungan-backend:latest
+    restart: always
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../../configs/.env
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - ../../configs/.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
