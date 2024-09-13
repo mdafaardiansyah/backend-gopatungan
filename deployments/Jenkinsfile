@@ -105,7 +105,10 @@ pipeline {
                 webhookURL: credentials('discord-webhook'),
                 title: "Deployment Successful",
                 description: "${env.JOB_NAME} ${env.BUILD_NUMBER}",
-                color: 0x36a64f
+                color: '3066993',
+                footer: 'Build berhasil!', // Menambahkan footer
+                link: env.BUILD_URL, // Menambahkan link ke build
+                result: currentBuild.currentResult // Menambahkan status build
             )
         }
         failure {
@@ -113,7 +116,10 @@ pipeline {
                 webhookURL: credentials('discord-webhook'),
                 title: "Deployment Failed",
                 description: "${env.JOB_NAME} ${env.BUILD_NUMBER}",
-                color: 0xff0000
+                color: '16711680',
+                footer: 'Build gagal!',
+                link: env.BUILD_URL,
+                result: currentBuild.currentResult
             )
         }
     }
