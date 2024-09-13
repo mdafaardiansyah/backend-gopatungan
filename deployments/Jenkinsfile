@@ -18,7 +18,83 @@ pipeline {
         DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     stages {
-        // ... (stages remain the same as in the previous version)
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("Checkout from SCM") {
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/mdafaardiansyah/backend-gopatungan.git'
+            }
+        }
+
+        stage("Build Application") {
+            steps {
+                sh 'go mod tidy'
+                sh 'go build -o gopatungan-backend ./cmd/gopatungan'
+            }
+        }
+
+        stage("Run Tests") {
+            steps {
+                sh 'go test ./... -v -cover'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            environment {
+                scannerHome = tool 'sonarqube-scanner-latest'
+            }
+            steps {
+                withSonarQubeEnv(credentialsId: 'user-sonarqube-token', installationName: 'sonarqube-scanner') {
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=gopatungan-backend \
+                    -Dsonar.sources=. \
+                    -Dsonar.go.coverage.reportPaths=coverage.out \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    """
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("Build & Push Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}", "-f build/Dockerfile .")
+                        customImage.push()
+                        customImage.push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to VPS') {
+            steps {
+                sshagent(credentials: ['vps-ssh-key']) {
+                    sh """
+                        [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                        ssh-keyscan -t rsa,dsa ${VPS_SERVER.split('@')[1]} >> ~/.ssh/known_hosts
+                        ssh ${VPS_SERVER} '
+                            cd ${VPS_DIR}/build
+                            docker-compose pull
+                            docker-compose up -d --force-recreate
+                        '
+                    """
+                }
+            }
+        }
     }
 
     post {
@@ -34,9 +110,7 @@ pipeline {
                 link: env.BUILD_URL,
                 result: currentBuild.currentResult,
                 thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png",
-                image: "https://www.jenkins.io/images/jenkins-smile.png",
-                enableArtifactList: true,
-                enableUrlLinking: true
+                image: "https://www.jenkins.io/images/jenkins-smile.png"
             )
         }
         failure {
@@ -48,9 +122,7 @@ pipeline {
                 link: env.BUILD_URL,
                 result: currentBuild.currentResult,
                 thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png",
-                image: "https://www.jenkins.io/images/jenkins-smile.png",
-                enableArtifactList: true,
-                enableUrlLinking: true
+                image: "https://www.jenkins.io/images/jenkins-smile.png"
             )
         }
     }
