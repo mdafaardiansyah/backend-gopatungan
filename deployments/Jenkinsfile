@@ -81,24 +81,18 @@ pipeline {
         }
 
         stage('Deploy to VPS') {
-           steps {
-               sshagent(credentials: ['vps-ssh-key']) {
-                   script {
-                       def remote = [:]
-                       remote.name = 'vps'
-                       remote.host = env.VPS_HOST
-                       remote.allowAnyHosts = true
-                       remote.user = 'your-ssh-username'
-
-                       sshCommand remote: remote, command: """
-                           cd ${env.VPS_DIR}
-                           git pull origin main
-                           docker-compose up -d --build
-                       """
-                   }
-               }
-           }
-       }
+            steps {
+                sshagent(credentials: ['vps-ssh-key']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no your-ssh-username@${env.VPS_HOST} '
+                        cd ${env.VPS_DIR}
+                        git pull origin main
+                        docker-compose up -d --build
+                        '
+                    """
+                }
+            }
+        }
     }
 
     post {
