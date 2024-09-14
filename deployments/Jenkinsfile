@@ -81,50 +81,51 @@ pipeline {
         }
 
         stage('Deploy to VPS') {
-            steps {
-                sshagent(credentials: ['vps-ssh-key']) {
-                    sh '''
-                        # Add or update the host key
-                        ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
+           steps {
+               sshagent(credentials: ['vps-ssh-key']) {
+                   script {
+                       def remote = [:]
+                       remote.name = 'vps'
+                       remote.host = env.VPS_HOST
+                       remote.allowAnyHosts = true
+                       remote.user = 'your-ssh-username'
 
-                        ssh -o StrictHostKeyChecking=accept-new $VPS_HOST <<EOF
-                        cd /path/to/your/project
-                        git pull origin main
-                        docker-compose up -d --build
-                        EOF
-                    '''
-                }
-            }
-        }
+                       sshCommand remote: remote, command: """
+                           cd ${env.VPS_DIR}
+                           git pull origin main
+                           docker-compose up -d --build
+                       """
+                   }
+               }
+           }
+       }
     }
 
     post {
-        always {
-            cleanWs()
-        }
-        success {
-            discordSend (
-                webhookURL: DISCORD_WEBHOOK,
-                title: "Deployment Successful: ${env.JOB_NAME}",
-                description: "Build #${env.BUILD_NUMBER} has completed successfully.",
-                footer: "Jenkins: ${JENKINS_VERSION}, Discord Notifier: ${DISCORD_NOTIFIER_VERSION}",
-                link: env.BUILD_URL,
-                result: currentBuild.currentResult,
-                thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png",
-                image: "https://www.jenkins.io/images/jenkins-smile.png"
-            )
-        }
-        failure {
-            discordSend (
-                webhookURL: DISCORD_WEBHOOK,
-                title: "Deployment Failed: ${env.JOB_NAME}",
-                description: "Build #${env.BUILD_NUMBER} has failed. Please check the logs for more information.",
-                footer: "Jenkins: ${JENKINS_VERSION}, Discord Notifier: ${DISCORD_NOTIFIER_VERSION}",
-                link: env.BUILD_URL,
-                result: currentBuild.currentResult,
-                thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png",
-                image: "https://www.jenkins.io/images/jenkins-smile.png"
-            )
-        }
-    }
+       always {
+           cleanWs()
+       }
+       success {
+           discordSend (
+               webhookURL: DISCORD_WEBHOOK,
+               title: "Deployment Successful: ${env.JOB_NAME}",
+               description: "Build #${env.BUILD_NUMBER} has completed successfully.",
+               footer: "Jenkins Build",
+               link: env.BUILD_URL,
+               result: currentBuild.currentResult,
+               thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png"
+           )
+       }
+       failure {
+           discordSend (
+               webhookURL: DISCORD_WEBHOOK,
+               title: "Deployment Failed: ${env.JOB_NAME}",
+               description: "Build #${env.BUILD_NUMBER} has failed. Please check the logs for more information.",
+               footer: "Jenkins Build",
+               link: env.BUILD_URL,
+               result: currentBuild.currentResult,
+               thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png"
+           )
+       }
+   }
 }
