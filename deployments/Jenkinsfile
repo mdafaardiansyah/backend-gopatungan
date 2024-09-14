@@ -84,7 +84,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh """
-                        ssh -o StrictHostKeyChecking=no your-ssh-username@${env.VPS_HOST} '
+                        ssh -v -o StrictHostKeyChecking=no your-ssh-username@${env.VPS_HOST} '
                         cd ${env.VPS_DIR}
                         git pull origin main
                         docker-compose up -d --build
