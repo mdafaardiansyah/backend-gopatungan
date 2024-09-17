@@ -142,6 +142,7 @@ pipeline {
             script {
                 def changes = getChanges()
                 def jenkinsVersion = Jenkins.instance.getVersion().toString()
+                def discordNotifierVersion = Jenkins.instance.pluginManager.getPlugin("discord-notifier").getVersion()
                 discordSend (
                     webhookURL: DISCORD_WEBHOOK,
                     title: "Deploy Failed !",
