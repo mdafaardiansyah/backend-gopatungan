@@ -27,7 +27,7 @@ pipeline {
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         SONAR_TOKEN = credentials('user-sonarqube-token')
         VPS_HOST = credentials('vps-host-credential')
-        VPS_DIR = "/path/to/gopatungan"
+        VPS_DIR = "/var/www/gopatungan/gopatungan-backend"
         DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     stages {
@@ -100,6 +100,7 @@ pipeline {
                         ssh -v -o StrictHostKeyChecking=no ${env.VPS_HOST} '
                         cd ${env.VPS_DIR}
                         git pull origin main
+                        cd build/
                         docker-compose up -d --build
                         '
                     """
