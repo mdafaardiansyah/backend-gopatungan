@@ -130,8 +130,9 @@ pipeline {
                     **Artifacts**:
 
                     No artifacts saved.
+
                     """,
-                    footer: "Jenkins Build, Jenkins **v${jenkinsVersion}**, Discord Notifier **v${discordNotifierVersion}**",
+                    footer: "**Jenkins Build** Jenkins **v${jenkinsVersion}**, Discord Notifier **v${discordNotifierVersion}**",
                     link: env.BUILD_URL,
                     result: currentBuild.currentResult,
                     thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png"
@@ -155,8 +156,9 @@ pipeline {
                     **Artifacts**:
 
                     No artifacts saved.
-                    Jenkins Build, Jenkins v${jenkinsVersion}, Discord Notifier v${discordNotifierVersion}""",
-                    footer: "Jenkins Build",
+
+                    """,
+                    footer: "**Jenkins Build** Jenkins v${jenkinsVersion}, Discord Notifier v${discordNotifierVersion}",
                     link: env.BUILD_URL,
                     result: currentBuild.currentResult,
                     thumbnail: "https://jenkins.io/images/logos/jenkins/jenkins.png"
