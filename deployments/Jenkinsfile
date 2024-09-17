@@ -97,7 +97,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh """
-                        ssh -v -o StrictHostKeyChecking=no ${env.VPS_HOST} '
+                        ssh -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
                         cd ${env.VPS_DIR}
                         git pull origin main
                         cd build/
