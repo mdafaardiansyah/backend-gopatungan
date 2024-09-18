@@ -101,7 +101,7 @@ pipeline {
                     usernamePassword(credentialsId: 'passphrase-ssh-github', usernameVariable: '_', passwordVariable: 'SSH_KEY_PASSPHRASE')
                     ]) {
                         sh """
-                            ssh -A -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
+                            ssh -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
                              # Menambahkan GitHub ke known_hosts jika belum ada
                             grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -112,12 +112,11 @@ pipeline {
 
                             eval `ssh-agent -s`
 
-                            # Memasukkan passphrase sebelum git pull
                             # Add GitHub SSH key to ssh-agent on the VPS
-                            # Use a here-document to securely pass the passphrase
-                            ssh-add ~/.ssh/id_rsa <<EOF
-                            ${SSH_KEY_PASSPHRASE.trim()}
-                            EOF
+                                                # Use a here-document to securely pass the passphrase
+                                                ssh-add ~/.ssh/id_rsa <<EOF
+                                                ${SSH_KEY_PASSPHRASE.trim()}
+                                                EOF
 
                             git pull origin main
 
