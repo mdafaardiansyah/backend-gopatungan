@@ -107,14 +107,14 @@ pipeline {
                             grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
 
                             # Menjalankan ssh-agent untuk mengelola kunci SSH
-                            eval `ssh-agent -s`
-                            ssh-add ~/.ssh/id_rsa
 
                             cd ${env.VPS_DIR}
 
-                            # Memasukkan passphrase sebelum git pull
-                            ssh-add -p "${SSH_KEY_PASSPHRASE.trim()}" ~/.ssh/id_rsa
+                            eval `ssh-agent -s`
+                            ssh-add ~/.ssh/id_rsa
 
+                            # Memasukkan passphrase sebelum git pull
+                            ssh-add - <<< "${SSH_KEY_PASSPHRASE.trim()}"
                             git pull origin main
 
                             cd build/
