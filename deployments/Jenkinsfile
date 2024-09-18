@@ -101,7 +101,14 @@ pipeline {
                         cd ${env.VPS_DIR}
                         git pull origin main
                         cd build/
-                        docker compose --env-file ../configs/.env up -d --build
+                        ls -la ../configs/  # Untuk debug, melihat isi direktori configs
+                        if [ -f "../configs/.env" ]; then
+                            echo ".env file exists"
+                            docker compose --env-file ../configs/.env up -d --build
+                        else
+                            echo ".env file not found"
+                            exit 1
+                        fi
                         '
                     """
                 }
