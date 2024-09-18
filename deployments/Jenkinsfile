@@ -97,36 +97,40 @@ pipeline {
         stage('Deploy to VPS') {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
-                    sh """
-                        ssh -A -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
+                    withCredentials([
+                    usernamePassword(credentialsId: 'passphrase-ssh-github', usernameVariable: '_', passwordVariable: 'SSH_KEY_PASSPHRASE')
+                    ]) {
+                        sh """
+                            ssh -A -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
-                         # Menambahkan GitHub ke known_hosts jika belum ada
-                        grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
+                             # Menambahkan GitHub ke known_hosts jika belum ada
+                            grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-                        # Menjalankan ssh-agent untuk mengelola kunci SSH
-                        eval `ssh-agent -s`
-                        ssh-add ~/.ssh/id_rsa
+                            # Menjalankan ssh-agent untuk mengelola kunci SSH
+                            eval `ssh-agent -s`
+                            ssh-add ~/.ssh/id_rsa
 
-                        cd ${env.VPS_DIR}
+                            cd ${env.VPS_DIR}
 
-                        # Memasukkan passphrase sebelum git pull
-                        echo "${SSH_PASSPHRASE.trim()}" | ssh-add -
-                        git pull origin main
+                            # Memasukkan passphrase sebelum git pull
+                            echo "${SSH_PASSPHRASE.trim()}" | ssh-add -
+                            git pull origin main
 
-                        cd build/
-                        ls -la ../../configs/  # Untuk debug, melihat isi direktori configs
-                        if [ -f "../../configs/.env" ]; then
-                            echo ".env file exists"
-                            docker compose --env-file ../../configs/.env up -d --build
-                        else
-                            echo ".env file not found"
-                            exit 1
-                        fi
+                            cd build/
+                            ls -la ../../configs/  # Untuk debug, melihat isi direktori configs
+                            if [ -f "../../configs/.env" ]; then
+                                echo ".env file exists"
+                                docker compose --env-file ../../configs/.env up -d --build
+                            else
+                                echo ".env file not found"
+                                exit 1
+                            fi
 
-                        # Mematikan ssh-agent
-                        ssh-agent -k
-                        '
-                    """
+                            # Mematikan ssh-agent
+                            ssh-agent -k
+                            '
+                        """
+                    }
                 }
             }
         }
