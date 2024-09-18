@@ -113,7 +113,7 @@ pipeline {
                             cd ${env.VPS_DIR}
 
                             # Memasukkan passphrase sebelum git pull
-                            echo "${SSH_PASSPHRASE.trim()}" | ssh-add -
+                            ssh-add -p "${SSH_PASSPHRASE.trim()}" ~/.ssh/id_rsa
                             git pull origin main
 
                             cd build/
