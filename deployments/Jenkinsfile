@@ -97,7 +97,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh """
-                        ssh -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
+                        ssh -A -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
                          # Menambahkan GitHub ke known_hosts jika belum ada
                         grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -112,7 +112,7 @@ pipeline {
                         ls -la ../configs/  # Untuk debug, melihat isi direktori configs
                         if [ -f "../configs/.env" ]; then
                             echo ".env file exists"
-                            docker compose --env-file ../configs/.env up -d --build
+                            docker compose --env-file ../../configs/.env up -d --build
                         else
                             echo ".env file not found"
                             exit 1
