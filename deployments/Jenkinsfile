@@ -112,8 +112,10 @@ pipeline {
 
                             cd ${env.VPS_DIR}
 
-                            # Memasukkan passphrase sebelum git pull
-                            ssh-add -p "${SSH_PASSPHRASE.trim()}" ~/.ssh/id_rsa
+                            # Menggunakan kredensial 'ssh-dafa-github-key' untuk git pull
+                            sshagent(credentials: ['ssh-dafa-github-key']) {
+                                git pull origin main
+                            }
                             git pull origin main
 
                             cd build/
