@@ -98,6 +98,14 @@ pipeline {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh """
                         ssh -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
+
+                         # Menambahkan GitHub ke known_hosts jika belum ada
+                        grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+                        # Menjalankan ssh-agent untuk mengelola kunci SSH
+                        eval `ssh-agent -s`
+                        ssh-add ~/.ssh/id_rsa
+
                         cd ${env.VPS_DIR}
                         git pull origin main
                         cd build/
@@ -109,6 +117,9 @@ pipeline {
                             echo ".env file not found"
                             exit 1
                         fi
+
+                        # Mematikan ssh-agent
+                        ssh-agent -k
                         '
                     """
                 }
