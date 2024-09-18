@@ -111,10 +111,14 @@ pipeline {
                             cd ${env.VPS_DIR}
 
                             eval `ssh-agent -s`
-                            ssh-add ~/.ssh/id_rsa
 
                             # Memasukkan passphrase sebelum git pull
-                            ssh-add - <<< "${SSH_KEY_PASSPHRASE.trim()}"
+                            # Add GitHub SSH key to ssh-agent on the VPS
+                            # Use a here-document to securely pass the passphrase
+                            ssh-add ~/.ssh/id_rsa <<EOF
+                            ${SSH_KEY_PASSPHRASE.trim()}
+                            EOF
+
                             git pull origin main
 
                             cd build/
