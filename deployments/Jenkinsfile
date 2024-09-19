@@ -109,18 +109,17 @@ pipeline {
 
                         cd ${env.VPS_DIR}
 
-
-                        # Memasukkan passphrase sebelum git pull
-                        echo "akusukadiadiasukaaku" | ssh-add -
                         git pull origin main
 
                         cd build/
                         ls -la ../../configs/  # Untuk debug, melihat isi direktori configs
-                        if [ -f "../../configs/.env" ]; then
+
+                        if [ -f "configs/.env" ]; then
                             echo ".env file exists"
-                            docker compose --env-file ../../configs/.env up -d --build
+                            docker compose --env-file configs/.env up -d --build
                         else
                             echo ".env file not found"
+                            ls -la configs/  # Untuk debugging
                             exit 1
                         fi
 
