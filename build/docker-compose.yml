@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ../../configs/.env:/app/.env  # Mount .env from host to container
+      - ./configs:/app/configs   # Mount .env from host to container
 
   db:
     image: mysql:8.0
