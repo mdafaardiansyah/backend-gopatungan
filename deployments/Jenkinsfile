@@ -112,15 +112,19 @@ pipeline {
 
                             git pull origin main
 
-                            cd build/
-                            ls -la ../../configs/  # Untuk debug, melihat isi direktori configs
+                            ls -l /var/www/gopatungan/gopatungan-backend/configs/
+                            ls -l /var/www/gopatungan/gopatungan-backend/configs/.env
 
-                            if [ -f "configs/.env" ]; then
+                            echo "Current directory: $(pwd)"
+                            cd /var/www/gopatungan/gopatungan-backend/build/
+                            echo "Build directory: $(pwd)"
+                            echo "Contents of ../configs/:"
+                            ls -la ../configs/
+                              if [ -f "../configs/.env" ]; then
                                 echo ".env file exists"
-                                docker compose --env-file configs/.env up -d --build
+                                docker compose --env-file ../configs/.env up -d --build
                             else
                                 echo ".env file not found"
-                                ls -la configs/  # Untuk debugging
                                 exit 1
                             fi
 
