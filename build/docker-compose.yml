@@ -1,5 +1,5 @@
 services:
-  api:
+  gopatungan-backend:
     image: ardidafa/gopatungan-backend:latest
     restart: always
     ports:
