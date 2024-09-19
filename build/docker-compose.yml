@@ -16,19 +16,3 @@ services:
       - db
     volumes:
       - ../configs:/app/configs
-
-  db:
-    image: mysql:8.0
-    restart: always
-    ports:
-      - "3306:3306"
-    env_file:
-      - ../configs/.env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-
-volumes:
-  mysql_data:
