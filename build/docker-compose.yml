@@ -5,7 +5,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ../configs/.env
+      - /var/www/gopatungan/gopatungan-backend/configs/.env
     environment:
       - DB_HOST=db
       - DB_USERNAME=${DB_USERNAME}
@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./configs:/app/configs   # Mount .env from host to container
+      - ../configs:/app/configs
 
   db:
     image: mysql:8.0

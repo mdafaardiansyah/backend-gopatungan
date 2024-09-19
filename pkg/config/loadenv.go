@@ -6,7 +6,7 @@ import (
 )
 
 func LoadEnv() error {
-	err := godotenv.Load("/app/.env")
+	err := godotenv.Load("/app/configs/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file:", err) // Log a fatal error if .env loading fails
 	}

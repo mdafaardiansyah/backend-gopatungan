@@ -13,6 +13,8 @@ RUN go mod download
 # Menyalin seluruh kode aplikasi
 COPY . .
 
+COPY configs /app/configs
+
 # Mengkompilasi aplikasi dengan CGO dinonaktifkan (untuk Alpine)
 RUN CGO_ENABLED=0 GOOS=linux go build -o app ./cmd/gopatungan
 
