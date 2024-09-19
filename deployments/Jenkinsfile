@@ -98,7 +98,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'passphrase-ssh-github-text', variable: 'SSH_PASS')]){
                     sshagent(credentials: ['vps-ssh-key']) {
-                        sh '''
+                        sh """
                             ssh -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
                              # Menambahkan GitHub ke known_hosts jika belum ada
@@ -108,6 +108,7 @@ pipeline {
                             eval `ssh-agent -s`
 
                             echo "${SSH_PASS}" | ssh-add ~/.ssh/id_rsa
+
                             cd "${env.VPS_DIR}"
 
                             git pull origin main
@@ -115,12 +116,13 @@ pipeline {
                             ls -l /var/www/gopatungan/gopatungan-backend/configs/
                             ls -l /var/www/gopatungan/gopatungan-backend/configs/.env
 
-                            echo "Current directory: $(pwd)"
+                            echo "Current directory: \$(pwd)"
                             cd /var/www/gopatungan/gopatungan-backend/build/
-                            echo "Build directory: $(pwd)"
+                            echo "Build directory: \$(pwd)"
                             echo "Contents of ../configs/:"
                             ls -la ../configs/
-                              if [ -f "../configs/.env" ]; then
+
+                            if [ -f "../configs/.env" ]; then
                                 echo ".env file exists"
                                 docker compose --env-file ../configs/.env up -d --build
                             else
@@ -131,7 +133,7 @@ pipeline {
                             # Mematikan ssh-agent
                             ssh-agent -k
                             '
-                        '''
+                        """
                     }
                 }
             }
