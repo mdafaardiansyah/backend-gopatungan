@@ -98,7 +98,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vps-ssh-key']) {
                     sh """
-                        ssh -A -v -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
+                        ssh -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
                          # Menambahkan GitHub ke known_hosts jika belum ada
                         grep -q github.com ~/.ssh/known_hosts || ssh-keyscan github.com >> ~/.ssh/known_hosts
