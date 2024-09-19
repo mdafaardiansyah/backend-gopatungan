@@ -10,10 +10,14 @@ services:
       - DB_HOST=db
     depends_on:
       - db
+    volumes:
+      - ../../configs/.env:/app/.env  # Mount .env from host to container
 
   db:
     image: mysql:8.0
     restart: always
+    ports:
+      - "3306:3306"
     env_file:
       - ../configs/.env
     environment:
