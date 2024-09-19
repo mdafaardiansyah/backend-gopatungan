@@ -98,7 +98,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'passphrase-ssh-github-text', variable: 'SSH_PASS')]){
                     sshagent(credentials: ['vps-ssh-key']) {
-                        sh """
+                        sh '''
                             ssh -o StrictHostKeyChecking=no -p 22 ${env.VPS_HOST} '
 
                              # Menambahkan GitHub ke known_hosts jika belum ada
@@ -131,7 +131,7 @@ pipeline {
                             # Mematikan ssh-agent
                             ssh-agent -k
                             '
-                        """
+                        '''
                     }
                 }
             }
