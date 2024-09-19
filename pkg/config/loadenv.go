@@ -5,5 +5,5 @@ import (
 )
 
 func LoadEnv() error {
-	return godotenv.Load("configs/.env")
+	return godotenv.Load("/app/.env")
 }
