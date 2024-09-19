@@ -108,7 +108,7 @@ pipeline {
                             eval `ssh-agent -s`
 
                             echo "${SSH_PASS}" | ssh-add ~/.ssh/id_rsa
-                            cd ${env.VPS_DIR}
+                            cd "${env.VPS_DIR}"
 
                             git pull origin main
 
