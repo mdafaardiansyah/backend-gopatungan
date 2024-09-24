@@ -16,7 +16,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -55,14 +54,19 @@ func main() {
 	//	log.Fatal("FRONTEND_URL environment variable is not set")
 	//}
 
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+
+	router.Use(cors.New(config))
+
+	//router.Use(cors.New(cors.Config{
+	//	AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
+	//	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	//	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+	//	ExposeHeaders:    []string{"Content-Length"},
+	//	AllowCredentials: true,
+	//	MaxAge:           12 * time.Hour,
+	//}))
 
 	router.Static("/images", "./assets/images")
 
