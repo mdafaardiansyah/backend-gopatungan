@@ -48,13 +48,15 @@ func main() {
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
-	//router.Use(cors.Default())
 
-	// Custom CORS configuration
-	FrontendUrl := os.Getenv("FRONTEND_URL")
+	// Ambil URL frontend dari environment variable
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		log.Fatal("FRONTEND_URL environment variable is not set")
+	}
 
 	defaultConfig := cors.DefaultConfig()
-	defaultConfig.AllowOrigins = []string{FrontendUrl}
+	defaultConfig.AllowOrigins = []string{frontendURL}
 	defaultConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	router.Use(cors.New(defaultConfig))
 
