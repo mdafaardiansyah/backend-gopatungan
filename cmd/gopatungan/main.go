@@ -15,7 +15,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -50,13 +49,13 @@ func main() {
 	router := gin.Default()
 
 	// Ambil URL frontend dari environment variable
-	frontendURL := os.Getenv("FRONTEND_URL")
-	if frontendURL == "" {
-		log.Fatal("FRONTEND_URL environment variable is not set")
-	}
+	//frontendURL := os.Getenv("FRONTEND_URL")
+	//if frontendURL == "" {
+	//	log.Fatal("FRONTEND_URL environment variable is not set")
+	//}
 
 	defaultConfig := cors.DefaultConfig()
-	defaultConfig.AllowOrigins = []string{frontendURL}
+	defaultConfig.AllowOrigins = []string{"http://localhost:3000"}
 	defaultConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	router.Use(cors.New(defaultConfig))
 
