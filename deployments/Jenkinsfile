@@ -75,9 +75,12 @@ pipeline {
         }
 
         stage("Quality Gate") {
+            when {
+                expression { !params.SKIP_QUALITY_GATE } // Skip if SKIP_QUALITY_GATE parameter is true
+            }
             steps {
                 timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true, skipQualityGate: true
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
