@@ -45,7 +45,7 @@ func main() {
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
-	router := gin.Default()
+	router := gin.New()
 
 	// Ambil URL frontend dari environment variable
 	//frontendURL := os.Getenv("FRONTEND_URL")
