@@ -141,6 +141,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		ctx.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		ctx.Writer.Header().Set("Cache-Control", "no-cache")
+		ctx.Writer.Header().Set("Vary", "Origin") // Add this line
 
 		if ctx.Request.Method == "OPTIONS" {
 			log.Println("OPTIONS")
