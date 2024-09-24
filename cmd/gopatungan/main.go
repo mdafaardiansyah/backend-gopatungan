@@ -47,7 +47,14 @@ func main() {
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
-	router.Use(cors.Default())
+	//router.Use(cors.Default())
+
+	// Custom CORS configuration
+	defaultConfig := cors.DefaultConfig()
+	defaultConfig.AllowOrigins = []string{"http://localhost:3000"} // Replace with your frontend's origin
+	defaultConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	router.Use(cors.New(defaultConfig))
+
 	router.Static("/images", "./assets/images")
 
 	api := router.Group("/api/v1")
