@@ -15,6 +15,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -50,8 +51,10 @@ func main() {
 	//router.Use(cors.Default())
 
 	// Custom CORS configuration
+	FrontendUrl := os.Getenv("FRONTEND_URL")
+
 	defaultConfig := cors.DefaultConfig()
-	defaultConfig.AllowOrigins = []string{"http://localhost:3000"} // Replace with your frontend's origin
+	defaultConfig.AllowOrigins = []string{FrontendUrl}
 	defaultConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	router.Use(cors.New(defaultConfig))
 
