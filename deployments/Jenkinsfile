@@ -12,9 +12,7 @@ def getChanges() {
     }
 
 pipeline {
-    agent {
-        label "jenkins-agent"
-    }
+    agent any
     tools {
         go 'go1.23.1'
     }
