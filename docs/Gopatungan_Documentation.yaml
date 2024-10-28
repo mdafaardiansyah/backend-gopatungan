@@ -1,0 +1,399 @@
+openapi: 3.0.0
+info:
+  title: Backend_Gopatungan
+  version: 1.0.0
+  description: >-
+    ## Project Overview
+
+    Gopatungan is a crowdfunding platform specifically designed to empower 
+    Usaha Mikro, Kecil, dan Menengah (UMKM) or micro, small, and medium-sized 
+    enterprises in Indonesia. It facilitates collective fundraising, enabling 
+    communities to support local businesses.
+
+    ## API Documentation
+
+    This documentation details the backend APIs for Gopatungan, allowing 
+    developers to understand and integrate with the platform's functionalities.
+    version: 1.0.0
+
+servers:
+  - url: http://{{baseurl}}
+    description: Production environment
+  - url: localhost://
+    description: Development environment
+tags:
+  - name: Users
+    description: Operations related to user management (registration, login, etc.).
+  - name: Campaign
+    description: Operations related to managing crowdfunding campaigns (creating, viewing, updating, etc.).
+  - name: Transaction
+    description: Operations related to transactions and donations (creating, viewing, etc.).
+
+paths:
+  /v1/users:
+    post:
+      tags:
+        - Users
+      summary: Register User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: test jwt register
+                email: afterdeploy1@gmail.com
+                job: devhandal
+                password: password
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/sessions:
+    post:
+      tags:
+        - Users
+      summary: Login User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: dapuk@gmail.com
+                password: password
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/email_checkers:
+    post:
+      tags:
+        - Users
+      summary: Email Checkers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: adapuk@gmail.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/avatars:
+    post:
+      tags:
+        - Users
+      summary: Avatar User
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.NtOPW4j_FsivsQPdaqnWTcv9764WGYs6UvWol-e8bLc
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/campaigns:
+    get:
+      tags:
+        - Campaign
+      summary: Campaign List
+      parameters:
+        - name: user_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Campaign
+      summary: Create Campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Campaign UMKM Simantabtul keempat
+                short_description: Sebuah Deskripsi Singkat Campaign UMKM Simantabtul
+                description: Sebuah Deskripsi Panjang Campaign UMKM Simantabtul
+                goal_amount: 20000000
+                perks: 1. Dapet A, 2. Dapet B, 3. Dapet C
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxM30.ISSLNk-H8s6lTOdm6LkBSguRLRVGIUIWJSiCou_l_Z4
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /080/images/1-PasFoto.jpg:
+    get:
+      tags:
+        - Campaign
+      summary: New Request
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/campaigns/1:
+    get:
+      tags:
+        - Campaign
+      summary: Campaign Detail
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/campaigns/3:
+    put:
+      tags:
+        - Campaign
+      summary: Update Campaign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Campaign UMKM Simantabtul ketiga Updated aaa
+                short_description: >-
+                  Sebuah Deskripsi Singkat Campaign UMKM Simantabtul Updated
+                  aaaaaa
+                description: Sebuah Deskripsi Panjang Campaign UMKM Simantabtul Updated
+                goal_amount: 30000000
+                perks: 1. Dapet A, 2. Dapet B, 3. Dapet C,4. Updated
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyfQ.3oT6TdwvLic4Y3ZAyvMVGotM1qUdlbfiD7xoi-9IazU
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/campaigns-images:
+    post:
+      tags:
+        - Campaign
+      summary: Upload Image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                campaign_id:
+                  type: integer
+                  example: '1'
+                is_primary:
+                  type: boolean
+                  example: 'true'
+                file:
+                  type: string
+                  format: binary
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.NtOPW4j_FsivsQPdaqnWTcv9764WGYs6UvWol-e8bLc
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/campaigns/1/transactions:
+    get:
+      tags:
+        - Transaction
+      summary: Campaign Transaction Detail
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.NtOPW4j_FsivsQPdaqnWTcv9764WGYs6UvWol-e8bLc
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/transactions:
+    get:
+      tags:
+        - Transaction
+      summary: User Transaction
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyfQ.3oT6TdwvLic4Y3ZAyvMVGotM1qUdlbfiD7xoi-9IazU
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Transaction
+      summary: Create User Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                campaign_id: 13
+                amount: 525000
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyfQ.3oT6TdwvLic4Y3ZAyvMVGotM1qUdlbfiD7xoi-9IazU
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: User ID
+        name:
+          type: string
+          description: User's full name
+        email:
+          type: string
+          format: email
+          description: User's email address
+        occupation:
+          type: string
+          description: User's occupation/job title
+        avatar_file_name:  # Assuming this field holds the avatar file name
+          type: string
+          description: Name of the user's avatar file
+
+    # ... (other schemas: Order, Customer, Address, etc.)
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Campaign ID
+        user_id:
+          type: integer
+          format: int64
+          description: ID of the user who created the campaign
+        name:
+          type: string
+          description: Campaign title
+        short_description:
+          type: string
+          description: Brief description of the campaign
+        description:
+          type: string
+          description: Detailed description of the campaign
+        goal_amount:
+          type: integer
+          description: Target fundraising amount
+        perks:
+          type: string
+          description: Perks offered to donors
+        current_amount:
+          type: integer
+          description: Current amount raised
+        slug:
+          type: string
+          description: URL-friendly identifier for the campaign
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Transaction ID
+        campaign_id:
+          type: integer
+          format: int64
+          description: ID of the campaign associated with the transaction
+        user_id:
+          type: integer
+          format: int64
+          description: ID of the user who made the transaction
+        amount:
+          type: integer
+          description: Transaction amount
+        status:
+          type: string
+          description: Transaction status (e.g., pending, success)
+        code:
+          type: string
+          description: Unique transaction code
+
+    # ... (other schemas: Order, Customer, Address, etc. - as provided in your input)
+
+  securitySchemes:
+    Gopatungan_Auth:  # Updated scheme name to be more descriptive
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  # Optional: specify the token format
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
+
+# ... (requestBodies from the previous response - if needed)
